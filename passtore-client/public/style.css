@@ -1,0 +1,13 @@
+.highlight {
+    background: var(--orange);
+    color: var(--white);
+    border-radius: .2rem;
+}
+
+.btn-xs {
+    font-size: 12px
+}
+
+.toast-success {
+    background: var(--green)
+}
