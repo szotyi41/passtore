@@ -1,4 +1,5 @@
 import React, { useState, useEffect, forwardRef, useRef, useImperativeHandle } from 'react'
+import ReactDirective from 'react-directive'
 import { Button, ButtonGroup, Form, Modal, InputGroup } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCopy, faTrash } from '@fortawesome/free-solid-svg-icons'
@@ -16,6 +17,7 @@ const ServerEdit = forwardRef((props, ref) => {
     const ip_regex = /^(([1-9]?\d|1\d\d|2[0-4]\d|25[0-5])(\.(?!$)|(?=$))){4}$/
     const server = props.serverStore.server
     const { name, color, local_ip, global_ip, services, comment } = server
+    const { user } = props.authStore
 
     const [ showModal, setShowModal ] = useState(false)
     const [ invalidName, setInvalidName ] = useState(false)
@@ -103,7 +105,7 @@ const ServerEdit = forwardRef((props, ref) => {
     }
 
     return (
-        <div>
+        <ReactDirective>
             <Modal size="lg" show={showModal} onHide={() => setShowModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Edit Server</Modal.Title>
@@ -234,9 +236,9 @@ const ServerEdit = forwardRef((props, ref) => {
                     margin-left: 16px;
                 }
             `}</style>
-        </div>
+        </ReactDirective>
     )
 
 })
 
-export default inject('serverStore')(observer(ServerEdit));
+export default inject('authStore')(inject('serverStore')(observer(ServerEdit)));

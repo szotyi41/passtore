@@ -9,6 +9,11 @@ export default class AuthStore {
   @observable loggedIn = false
   @observable invalid = false
   @observable token = ''
+  @observable user = {}
+
+  @action setUser(user) {
+    this.user = user
+  }
 
   @action setEmail(email) {
     this.email = email
@@ -30,9 +35,12 @@ export default class AuthStore {
   @action login() {
     this.loading = true;
     return axios.post('login', { email: this.email, password: this.password }).then(response => {
-        axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.token
+      this.invalid = false
+      localStorage.setItem('token', response.data.token)
+      axios.post('user').then(response => {
+        this.setUser(response.data)
         this.loggedIn = true
-        this.invalid = false
+      })
     }).catch(error => {
         this.invalid = true
     }).finally(() => {
@@ -41,13 +49,17 @@ export default class AuthStore {
   }
 
   @action logout() {
-    this.inProgress = true;
+    axios.post('user').then(response => {
+      this.setUser(response.data)
+      this.loggedIn = true
+    })
+    /* this.inProgress = true;
     return axios.post('logout', {}).then(response => {
         this.loggedIn = false
     }).catch(error => {
         console.log(error)
     }).finally(() => {
         this.inProgress = false
-    })
-  }
+    }) */
+  } 
 }

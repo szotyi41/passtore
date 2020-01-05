@@ -14,6 +14,8 @@ export default class ServerStore extends ServiceStore {
 
 		this.defaultServer = {
 			_id: '',
+			vendor_id: '',
+			virtual_id: '',
 			enabled: true,
 			status: '',
 			name: '',
@@ -72,6 +74,7 @@ export default class ServerStore extends ServiceStore {
 			return (
 				server.name.toLowerCase().indexOf(searchText) !== -1 ||
 				server.local_ip.indexOf(searchText) !== -1 ||
+				server.global_ip.indexOf(searchText) !== -1 ||
 				server.services.some(service => service.name.indexOf(searchText) !== -1 || service.type === searchText) ||
 				server.domains.some(domain => domain.name.indexOf(searchtext) !== -1)
 			)

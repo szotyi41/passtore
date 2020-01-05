@@ -21,16 +21,23 @@ Route.on('/').render('login')
 Route.post('login', 'UserController.login').middleware('guest')
 Route.get('register', 'UserController.register').middleware('guest')
 Route.post('logout', 'UserController.logout').middleware('auth')
-Route.get('user', 'UserController.get').middleware('auth')
-//
+Route.post('user', 'UserController.getUser').middleware('auth')
+
+// User routes
+Route.resource('users', 'UserController').middleware(['auth'])
 
 // Server routes
 Route.resource('server', 'ServerController').middleware('auth')
+
+// Service routes
 Route.delete('service/:serverId/:serviceId', 'ServerController.removeService').middleware('auth')
-Route.delete('domain/:serverId/:domainId', 'ServerController.removeDomain').middleware('auth')
 
 // Domain routes
+Route.delete('domain/:serverId/:domainId', 'ServerController.removeDomain').middleware('auth')
 Route.get('domain/checkSSL', 'DomainController.checkSSL').middleware('auth')
+
+// Vendor routes
+Route.resource('vendor', 'VendorController').middleware('auth')
 
 Route.match(['options'],'*', function () {
   return 'allowed'

@@ -40,13 +40,13 @@ class ServerController {
     }
 
     const values = {
-      name: request.input('name'),
-      color: request.input('color'),
-			local_ip: request.input('local_ip'),
-			global_ip: request.input('global_ip'),
-			domains: request.input('domains'),
-			services: request.input('services'),
-			comment: request.input('comment')
+        name: request.input('name'),
+        color: request.input('color'),
+        local_ip: request.input('local_ip'),
+        global_ip: request.input('global_ip'),
+        domains: request.input('domains'),
+        services: request.input('services'),
+        comment: request.input('comment')
     }
 
     return await Server.updateOrCreate(query, values)

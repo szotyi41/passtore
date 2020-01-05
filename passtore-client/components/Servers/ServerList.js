@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
+import ReactDirective from 'react-directive'
 import Link from 'next/link'
 import { Container, Button, Form, Modal, InputGroup, Alert, Breadcrumb } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -14,6 +15,8 @@ import ServerRemove from './ServerRemove'
 const ServerList = (props) => {
 
     const { serversFiltered, searchText, loading, defaultServer } = props.serverStore
+    const { user } = props.authStore
+    
     const serverEditModal = useRef()
     const serverRemoveModal = useRef()
 
@@ -33,30 +36,32 @@ const ServerList = (props) => {
     }
     
     return (
-        <Container className="mt-2">
+        <ReactDirective>
 
-            <Navbar />
+            <Navbar authStore={props.authStore} />
 
-            <Form>
-                <Form.Group controlId="search">
-                    <InputGroup>
-                        <Form.Control type="search" placeholder="Enter search"  aria-describedby="search-icon" value={searchText} onChange={e => props.serverStore.setSearchText(e.target.value)} />
-                        <InputGroup.Append>
-                            <InputGroup.Text id="search-icon"><FontAwesomeIcon icon={faSearch} /></InputGroup.Text>
-                        </InputGroup.Append>
+            <Container className="mt-2">
+                <Form>
+                    <Form.Group controlId="search">
+                        <InputGroup>
+                            <Form.Control type="search" placeholder="Enter search"  aria-describedby="search-icon" value={searchText} onChange={e => props.serverStore.setSearchText(e.target.value)} />
+                            <InputGroup.Append>
+                                <InputGroup.Text id="search-icon"><FontAwesomeIcon icon={faSearch} /></InputGroup.Text>
+                            </InputGroup.Append>
 
-                        <Button variant="primary" className="ml-2" onClick={e => openEditModal(defaultServer)}>Add server</Button>
-                    </InputGroup>
-                </Form.Group>
-            </Form>
+                            <Button data-react-if={user.role === 'admin'} variant="primary" className="ml-2" onClick={e => openEditModal(defaultServer)}>Add server</Button>
+                        </InputGroup>
+                    </Form.Group>
+                </Form>
 
-            {serversFiltered.length ? (
-                serversFiltered.map(server => <Server server={server} key={server._id} onEdit={e => openEditModal(server)} onRemove={e => openRemoveModal(server)}></Server>)
-            ) : loading ? '' : (<Alert variant='warning'>No results for search {searchText}</Alert>)}
+                {serversFiltered.length ? (
+                    serversFiltered.map(server => <Server server={server} key={server._id} onEdit={e => openEditModal(server)} onRemove={e => openRemoveModal(server)}></Server>)
+                ) : loading ? '' : (<Alert variant='warning'>No results for search {searchText}</Alert>)}
 
-            <ServerEdit ref={serverEditModal} serverStore={props.serverStore}></ServerEdit>
-            <ServerRemove ref={serverRemoveModal} serverStore={props.serverStore}></ServerRemove>
-        </Container>
+                <ServerEdit ref={serverEditModal} serverStore={props.serverStore}></ServerEdit>
+                <ServerRemove ref={serverRemoveModal} serverStore={props.serverStore}></ServerRemove>
+            </Container>
+        </ReactDirective>
     )
     
 }

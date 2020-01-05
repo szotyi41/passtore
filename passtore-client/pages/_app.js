@@ -1,4 +1,4 @@
- import React from 'react'
+import React from 'react'
 import App from 'next/app'
 import Head from 'next/head'
 import LoadingBar from '../components/Loadingbar.js'
@@ -15,14 +15,20 @@ import '../public/style.css'
 import AuthStore from '../store/AuthStore.js'
 import ServerStore from '../store/ServerStore.js'
 import LoadingStore from '../store/LoadingStore.js'
+import VendorStore from '../store/VendorStore.js'
+import UserStore from '../store/UserStore.js'
 
 export default class MyApp extends App {
 
 	constructor() {
+
 		super()
+
 		this.loadingStore = new LoadingStore()
 		this.serverStore = new ServerStore(this.loadingStore)
 		this.authStore = new AuthStore(this.loadingStore)
+		this.vendorStore = new VendorStore(this.loadingStore)
+		this.userStore = new UserStore(this.loadingStore)
 	}
 
 	render() {
@@ -31,11 +37,20 @@ export default class MyApp extends App {
 
 		return (
 			<div>
+
+				<Head>
+					<title>Passtore</title>
+				</Head>
+
 				<Provider loadingStore={this.loadingStore}>
 					<LoadingBar loadingStore={this.loadingStore} />
 					<Provider authStore={this.authStore}>
 						<Provider serverStore={this.serverStore}>
-							<Component {...pageProps} />
+							<Provider vendorStore={this.vendorStore}>
+								<Provider userStore={this.userStore}>
+									<Component {...pageProps} />
+								</Provider>
+							</Provider>
 						</Provider>
 					</Provider>
 				</Provider>
